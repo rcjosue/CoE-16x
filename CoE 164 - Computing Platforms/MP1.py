@@ -2,8 +2,11 @@ def main():
      global alphas
      alphas = alpha(2)
      validM = {'L', 'M', 'Q', 'H'} #turn into 2 dicts (v1, v2) with value = # of codewords
+     codewords = [ {'L':7 , 'M':10, 'Q':13, 'H':17} , {'L':10 , 'M':16, 'Q':22, 'H':28}]
+     ans = []
+
      try:
-          T = int(input('Input number of messages: '))
+          T = int(input())
      except:
           print("Error: Invalid value")          
      if ( (T > 10) or (T<0) ):
@@ -15,11 +18,24 @@ def main():
                if ( (( params[0] != '1') and (params[0] != '2')) or (params[1] not in validM) or ( (params[2] > '34') and (params[2] < '1') ) ):
                     print ('Error: invalid parameters')
                else:
-                    N = int(params[2]) 
-                    polynomial = generator( N )
-                    message = ( input().split(" ") )
-                    remainder = divide (polynomial, message, N)
-                    print( " ".join(map(str, remainder)) )
+                    N = int(params[2])
+                    C = codewords[ int(params[0])-1 ] [params[1] ]
+                    polynomial = generator( C )
+                    message = list( map( int , input().split(" ") ) )
+                    remainder = divide (polynomial, message, N, C)
+                    ans.append( " ".join(map(str, remainder)) )
+     for item in ans:
+          print( item )
+     '''
+     #File output
+     import datetime
+     now = datetime.datetime.now()
+     filename = 'out_' + str(now.strftime("%Y%m%d_%H%M%S")) + '.txt'
+     f = open(filename, "w")
+     for item in ans:
+          f.write(item + '\n')
+     f.close()
+     '''
 
 def alpha(a):
      '''Takes an integer 'a' and generates 'a' number of alpha values'''
@@ -35,7 +51,7 @@ def alpha(a):
      return alphas
 
 def generator(c):
-     '''Make the a polynomial'''
+     '''Makes the the generator polynomial'''
      G = [0]
      for i in range(1 , c):
           G.append(0)
@@ -47,13 +63,20 @@ def generator(c):
      G.reverse()
      return G
           
-def divide( g_x , m_x, n):
-     m_x += ( [0]*n )
-     for x in range(n+1):
-          h = alphas.index( m_x[0] ) #takes coefficent of highest term of message and looks for exponent in alpha
-          g_prime = list( map (lambda item: alphas[ item + h ], g_x) )
-          for elem in range( len(g_prime) ):
-               m_x[elem] ^= g_prime[elem]
+def divide( g_x , m_x, n, c):
+     '''Long division of generator and message polynomials, returns the remainder'''
+     m_x += ( [0]*(c) )
+     for x in range( n ):
+          if (m_x[0] == 0):
+               g_prime = g_x.copy()
+          else:
+               h = alphas.index( m_x[0] ) #takes coefficent of highest term of message and looks for exponent in alpha
+               g_prime = list ( map (lambda item: alphas[ ( (item+h) % 255 ) ], g_x) )
+          for elem in range( len(m_x) ):
+               try:
+                    m_x[elem] ^= g_prime[elem]
+               except:
+                    m_x[elem] ^= 0
           del (m_x[0])
      return (m_x)
      
