@@ -1,0 +1,10 @@
+Ryan Izach C. Josue		2018-12231
+CoE 163				ME 1
+
+Using Python and the time module, I profiled 3 algorithms and another one as a sort of control. This control was a simple loop from 1 to the number of layers adding while taking the sum of the current sum and the current iteration value to give the number of pins need to set up. This was also used to compare to the other output of the other outputs.
+
+I decided to use algorithm number 3 to be loaded into my machine. This was based off a pattern I found when writing out the first few inputs and outputs. The function checks if the number of layers are odd or even then takes the product of itself and a half then adding 1 if its odd. Comparing this to control it gives the same values as well.
+
+Running 400 times, and getting the average of 3 runs, it gave a time of 0.8749873638153076 seconds. This algorithm however may be slower when compared to the others when there are less layers.
+
+Despite having many operations this proved to be the fastest as it is no longer a loop and does not need to store many values or modify memory as much. It also substitutes modulo and division with bit shifting and bitwise comparision which is faster.

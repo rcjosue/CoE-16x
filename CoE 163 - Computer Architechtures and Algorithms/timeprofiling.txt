@@ -1,0 +1,37 @@
+Time Profiling:
+    CPP------------------------------
+    gprof:
+        Compile normally with -pg at end
+        Ex:
+            gcc program.cpp -o compiled_name -pg
+            ./compiled_name
+            gprof compiled_name gmon.out
+        flat profile - shows runtime of each function
+        call graph - show time spent running a func and functions called 
+    
+    perf:
+        newer gen-purpose for Linux-kernel
+        compile normally then run perf
+        Ex:
+            gcc program.cpp -o compiled_name
+            perf record -g ./compiled_name
+            perf report
+        call graph - same as gprof
+        disassembler - percent time running each assembly instruction
+    Python----------------------------
+    timeit module
+        from timeit import timeit
+        timeit(`''
+        insert_function_here `'', setup = '''
+        insert_setup_stuff_here ;
+        `''        )
+    time module
+        import time
+        start_t = time.time()
+        ende_t = time.time()
+        print(f'Time elapsed: {ende_t - start_t}s')
+    cProfile module
+        import cProfile
+        cProfile.run(`''
+        insert_function_here
+        `'')

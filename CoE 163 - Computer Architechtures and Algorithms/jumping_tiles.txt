@@ -1,0 +1,23 @@
+1. Following the paradigm I would first look for the largest jump required, then if the jumps happens more than once then k = largest jump + 1.
+If its only happens once, list the highest jumps after where the largest jump happen that are 1 value from each other.
+If they all only occur once or the next jumps are 2 steps less than largest jump then k = largest jump.
+If any of the next largest jumps happen multiple times check if at least 2 happen after the next largest jump(1 value away) if yes then k = largest jump + 1, if not then k = largest jump. 
+
+
+2. Code will be pretty similar to how I would solve it as a human but would be less limited to memory. With dynamic programming and memoization we could iterate once through all the tiles to store the distances in a sorted dictionary with the keys as the distance of the jump and the values as a pair with ( first: the number of occurrences which will be incremented as an index is stored , second: a list of indexes where the jump happens ). Using the pandas library could make accessing data even faster but I wont go into that. 
+
+If first pair of largest jump in sorted dictionary is more that 1 set k = largest jump + 1, if not then iterate through the sorted dictionary and keeping only the keys that are 1 value apart and stop once they are 2 values apart, the rest of the dictionary may be deleted to save space. While this is done the length of the list of indexes are updated to only have values larger than where the largest jump is found and the number of occurrences are updated.
+
+If all number of occurrences are 1 or no elements are in the dictionary then k = largest jump. If not, then in the dictionary starting from the largest jump - 1, if the 2nd to the last index exists and is larger than first index of the the current jump + 1 then k = largest jump + 1, else k = largest jump.
+
+This cuts the iterations by a large factor unless all tiles are within 1 distance apart. Despite only needing 2 loops to test the 2 possible values of k a complete search would also require a loop to find the  highest value. While a greedy algorithm would probably just take the largest jump value and not be able to consider all possible cases.
+
+
+
+
+2.1 Code will be pretty similar to how I would solve it as a human but would be less limited to memory. After typing a very complex solution using dynamic programming and memoization I realized a simple iterative bottom-up algorithm while keeping track of variables can solve this easily. First initializing the current jump, minimum jump (k), max distance to the first distance given, subtracting 1 from current jump and then start iterating through the tiles. As this is done the max distance is updated, Should the distance be larger than k, k is set to the distance value, this will ensure that k will always be the largest distance of the tiles. 
+
+the current jump capacity, the current jump and k are set to the distance value then 1 is subtracted from the current jump. This will ensure that k will always be the largest distance of the tiles. 
+Should the distance be equal to current jump capacity the current jump and k are incremented by 1 if and only if k is less than the max distance so far + 1. This will ensure that k is valid by 
+
+Despite only needing 2 loops to test the 2 possible values of k a complete search would also require a loop to find the  highest value. While a greedy algorithm would probably just take the largest jump value and not be able to consider all possible cases.
