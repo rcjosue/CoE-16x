@@ -1,0 +1,37 @@
+Ryan Izach Josue, 2018-12231
+
+Short Journal
+
+The program was written in Python and run using Python 3.9.
+If else statements were used to handle errors in value and the try except was used to handle type errors
+All codewords for each mesage are appended to a list and printed afterward
+
+Alpha computation
+x and the list of alphas were initialize to have a value of 1 as this will always be the first term.
+A for loop from 1 to 255 using the previous alpha value times alpha to get the current alpha value.
+if the current value if higher than 255 it takes the value of itself XOR 285. This calculates all 
+the values of alpha and stores into an array returned to the main function. Bitshift would have been
+faster but this does not allow the user to input other values of alpha.
+
+Generator
+The function takes in c or the number of codewords needed and generate a polynomial with 
+c+1 elements with x^0 to be the lowest and x^c to be the highest order. This is built from 
+the product of (x-alpha^0)(x-alpha^1)...(x-alpha^c-1) but expressed as an array of coefficients.
+
+A loop from 1 to c is used, a copy, Gb, of the previous polynomial is made each time with each 
+element increased by i to serve as G times alpha i. A zero is appended to increase the order 
+of G then G and Gb are added together and the iteration ends with the last term of Gb is copied 
+to the last term of G. Another 0 is appended and the whole polynomial is reveresed and returnsed.
+
+Message
+The message polynomial was created with a single line splitting the input by the whitespaces and
+mapping each element to a int type and converting it back to a list
+
+Division
+The function mimics long division of polynomials namely the message divided by the generator and
+returns the remainder.  First c amount of zeros are appended to the message polynomial to serve
+as placeholders for the remainder of length c. A loop from 0 to n-1 by default takes h, or
+the corresponding exponent of the highest order coefficient of the message this is added to the
+exponent of each element of g and an XOR is done on the equivalent alpha value and current message
+elements. Since the message is longer than the generator the remaining message elements are copied.
+At the end of the iteration the message is truncated in the front since this element should be 0.

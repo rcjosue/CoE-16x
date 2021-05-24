@@ -1,3 +1,4 @@
+#Ryan Izach Josue, 2018-12231
 def main():
      global alphas
      alphas = alpha(2)
@@ -26,32 +27,21 @@ def main():
                     ans.append( " ".join(map(str, remainder)) )
      for item in ans:
           print( item )
-     '''
-     #File output
-     import datetime
-     now = datetime.datetime.now()
-     filename = 'out_' + str(now.strftime("%Y%m%d_%H%M%S")) + '.txt'
-     f = open(filename, "w")
-     for item in ans:
-          f.write(item + '\n')
-     f.close()
-     '''
 
 def alpha(a):
-     '''Takes an integer 'a' and generates 'a' number of alpha values'''
-     alphas = []
-     for num in range (8):
-          x = pow(a,num)
-          alphas.append(x)
-     for num in range (8,256):
+     '''Takes an integer a or alpha and generates 255 alpha values'''
+     x = 1
+     alphas = [1]
+     for num in range (1,256):
           x *= a
           if ( x > 255):
                x ^= 285
           alphas.append(x)
      return alphas
 
+
 def generator(c):
-     '''Makes the the generator polynomial'''
+     '''Makes a generator polynomial as a list of coefficient with c+1 elements and x^c to be the highest order'''
      G = [0]
      for i in range(1 , c):
           G.append(0)
@@ -62,42 +52,22 @@ def generator(c):
      G.append(0)
      G.reverse()
      return G
-          
+
 def divide( g_x , m_x, n, c):
-     '''Long division of generator and message polynomials, returns the remainder'''
+     '''Long division of generator and message polynomials, returns the remainder as a list of coefficients'''
      m_x += ( [0]*(c) )
      for x in range( n ):
           if (m_x[0] == 0):
-               g_prime = g_x.copy()
+               del (m_x[0])
+               continue
+               #g_prime = g_x.copy()
           else:
                h = alphas.index( m_x[0] ) #takes coefficent of highest term of message and looks for exponent in alpha
                g_prime = list ( map (lambda item: alphas[ ( (item+h) % 255 ) ], g_x) )
-          for elem in range( len(m_x) ):
-               try:
-                    m_x[elem] ^= g_prime[elem]
-               except:
-                    m_x[elem] ^= 0
+          for elem in range( c+1 ):
+               m_x[elem] ^= g_prime[elem]
           del (m_x[0])
      return (m_x)
      
-
 if __name__ == "__main__":
      main()
-
-
-'''
-Short Journal Draft
-
-The program was written in Python 3.9.
-If else statements were used to handle errors in value and the try except was used to handle type errors
-
-Alpha computation
-for loop from 0 to 7 then 8 onwards as the pattern changes from taking alpha raised to a number into the previous alpha times alpha
-if the current value if higher than 255 it takes the value of itself XOR 285. This calculates all the values of alpha and stores
-into an array returned to the main function
-pow was shown to be faster than **
-
-Generation
-
-
-'''
