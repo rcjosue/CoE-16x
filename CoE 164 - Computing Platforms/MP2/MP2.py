@@ -1,60 +1,66 @@
 import cmath
 
-two_pow = [1]
+powers_of_two = [1]
 x = 1
-
 for num in range (1,15):
      x *= 2
-     two_pow.append(x)
-print (two_pow)
-#T = int(input())
-
-signal = input().split(" ")
-N = int(signal.pop(0))
-length = N
-
-for exp in two_pow:
-     if length <= exp:
-          length = exp
-          break
-     
-for i in range(exp-N):
-     signal.append(0)
-
-print (length)
-
-def rec_split (signal):
+     powers_of_two.append(x)
+   
+def fft (signal):
      if len(signal) == 2:
-          print(signal)
-          x = int( signal[0] )
-          y  = int( signal[1] )
-          #return( x+y + x-y )
-          return( [x,y] )
+          x = ( signal[0] )
+          y = ( signal[1] )
+          return( [ x+y , x-y ] )
      
      if len(signal) == 1:
-          print(signal)
-          return( [ int( signal[0] ) ] )
+          return( signal )
      
-     even = rec_split(signal[::2])
-     odd_1 = rec_split(signal[1::4])
-     odd_2 = rec_split(signal[3::4])
-     return( [even , odd_1 , odd_2 ] )
+     fft_even = fft(signal[0::2])
+     fft_odd1 = fft(signal[1::4])
+     fft_odd2 = fft(signal[3::4])
 
-def rec_split_solve (signal):
-     if len(signal) == 2:
-          x = int( signal[0] )
-          y  = int( signal[1] )
-          return( [x+y, x-y] )
-     if len(signal) == 1:
-          print(signal)
+     twiddling_factor = [ cmath.exp((-2j*cmath.pi*i)/ len (signal) ) for i in range( len (signal) ) ]
 
-     even = rec_split(signal[::2])
-     odd_1 = rec_split(signal[1::4])
-     odd_2 = rec_split(signal[3::4])
+     sum_odd = [(twiddling_factor[i]*fft_odd1[i] + twiddling_factor[i*3]*fft_odd2[i]) for i in range( len(fft_odd1) ) ]
+     diff_odd = [(twiddling_factor[i]*fft_odd1[i] - twiddling_factor[i*3]*fft_odd2[i]) for i in range( len(fft_odd1) ) ]
 
-     
-     
-     return( [  even + w_n * odd_1  + w_n * odd_2 ] )
-     
-print( rec_split(signal) )
+     X0 = []
+     X1 = []
+     X2 = []
+     X3 = []
+
+     for i in range( len(sum_odd) ):
+          X0.append(fft_even[i] + sum_odd[i])
+          X1.append(fft_even[i + len(signal)//4] - 1j*diff_odd[i])
+          X2.append(fft_even[i] - sum_odd[i])
+          X3.append(fft_even[i + len(signal)//4] + 1j*diff_odd[i])          
+
+     return( X0 + X1 + X2 + X3 )
+
+T = int(input())
+print( T )
+for t in range(T):
+     signal = list(map(int, input().split(" ") ) )
+     N = signal.pop(0)
+     length = N
+
+     for exp in powers_of_two:
+          if length <= exp:
+               length = exp
+               break
+          
+     for i in range(exp-N):
+          signal.append(0)
+
+     transformed = fft(signal)
+     output = ''
+     for i in range(length):
+          if (transformed[i].real)>=0:
+                output +='+'
+          output += str(round(transformed[i].real, 6)) 
+          if (transformed[i].imag)>=0:
+                output +='+'
+          output +=str( round(transformed[i].imag, 6)*1j.imag ) + 'j '
+
+     print( str(N) + ' ' + str(length) + ' ' + output )
 
