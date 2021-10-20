@@ -64,13 +64,26 @@ def typical_set_codec(channel, x_dist, frame_len, block_len, num_frames, epsilon
 
 
 p = 0.001
-channel = [ [ (1-p) , p ] , [ p , (1-p) ] ]
+channel = [ [ (1-p) , p ] , [ p , (1-p) ] ] #BSC
 #channel = [ [ 0 , 1 ] , [ 1 , 0 ] ]
-x = [ 0.5, 0.5]
-frame = 1
-block = 2
-num = 10000
+x = [ 0.5 , 0.5 ]
+frame = 10
+block = 400
+num = 5000
 e = 0.02
-print( typical_set_codec( channel, x, frame, block, num, e  ) )
 
+a = typical_set_codec( channel, x, frame, block, num, e  )
+b = typical_set_codec( channel, x, frame, block, num, e  ) 
+c = typical_set_codec( channel, x, frame, block, num, e  )
+print( a,b,c )
+ave= (a+b+c)/3
+print( ave )
+
+channel2 = [ [ (1-p) , 0 , p ] , [ 0, (1-p), p ] ] #BEC
+a = typical_set_codec( channel2, x, frame, block, num, e  )
+b = typical_set_codec( channel2, x, frame, block, num, e  ) 
+c = typical_set_codec( channel2, x, frame, block, num, e  )
+print( a,b,c )
+ave= (a+b+c)/3
+print( ave )
 #print( y-x,' ', z-y )
